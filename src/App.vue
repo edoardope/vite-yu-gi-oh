@@ -14,16 +14,34 @@ export default {
     }
   },
   created() {
-    axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?staple=yes')
-      .then(res => {
-        console.log(res.data.data[0].card_images[0].image_url)
-
-        const cards = res.data.data
-
-        this.store.yuGiOhCardsData = cards
-      })
+    this.searchArchetype();
   },
   methods: {
+    searchArchetype() {
+      if (store.selectedArche != "all") {
+        axios.get(`https://db.ygoprodeck.com/api/v7/cardinfo.php?archetype=${store.selectedArche}`)
+          .then(res => {
+            console.log(res.data.data[0].card_images[0].image_url)
+
+            const cards = res.data.data
+
+            this.store.yuGiOhCardsData = cards
+
+          })
+
+      } else {
+        axios.get('https://db.ygoprodeck.com/api/v7/cardinfo.php?staple=yes')
+          .then(res => {
+            console.log(res.data.data[0].card_images[0].image_url)
+
+            const cards = res.data.data
+
+            this.store.yuGiOhCardsData = cards
+
+          })
+      }
+
+    },
     getImagePath: function (imgPath) {
       return new URL(imgPath, import.meta.url).href;
     }
@@ -39,7 +57,7 @@ export default {
     <span class="h1 ms-3">Yu-Gi-Oh Api</span>
   </header>
   <main>
-    <CardCont />
+    <CardCont @search="searchArchetype" />
   </main>
 </template>
 

@@ -1,6 +1,7 @@
 <script>
-import SingleCard from './SingleCard.vue'
+import SingleCard from './SingleCard.vue';
 import { store } from '../store';
+import axios from 'axios';
 
 export default {
   name: "CardCont",
@@ -9,8 +10,15 @@ export default {
   },
   data() {
     return {
-      store
+      store,
     }
+  },
+  created() {
+    axios.get('https://db.ygoprodeck.com/api/v7/archetypes.php')
+      .then(res => {
+        store.archetypes = res.data
+        console.log(store.archetypes)
+      })
   },
   methods: {
 
@@ -20,7 +28,12 @@ export default {
 
 <template>
   <div class="counter">
-    <span class="text-white h6">Found {{ store.yuGiOhCardsData.length }} cards</span>
+    <select v-model="store.selectedArche" class="form-select" aria-label="Default select example">
+      <option selected>all</option>
+      <option v-for="(element, index) in store.archetypes">{{ element.archetype_name }}</option>
+    </select>
+    <button type="button" class="btn btn-primary" @click.prevent="$emit('search')">cerca</button>
+    <span class="text-white h6 ms-2">Found {{ store.yuGiOhCardsData.length }} cards</span>
   </div>
   <main>
     <SingleCard v-for="(element, index) in store.yuGiOhCardsData" :key="index" :dettagliCarta="element" :cindex="index" />
@@ -45,5 +58,10 @@ main {
   padding-right: 5%;
   display: flex;
   align-items: center;
+
+  select {
+    width: 200px;
+    margin-right: 10px;
+  }
 }
 </style>
