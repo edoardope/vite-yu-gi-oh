@@ -1,1 +1,18 @@
-@import 'node_modules/bootstrap/scss/bootstrap'
+@import 'node_modules/bootstrap/scss/bootstrap';
+
+header {
+    padding-left: 10%;
+    padding-right: 10%;
+    display: flex;
+    align-items: center;
+    height: 100px;
+
+    img {
+        height: 50%;
+    }
+}
+
+main {
+    background-color: orange;
+    padding: 5%;
+}
